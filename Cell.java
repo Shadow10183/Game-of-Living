@@ -15,6 +15,7 @@ public abstract class Cell {
     private Location location;
     private Color color = Color.WHITE;
     private String cellName;
+    private int age;
 
     /**
      * Create a new cell at location in field.
@@ -27,6 +28,7 @@ public abstract class Cell {
         nextAlive = false;
         this.field = field;
         this.cellName = cellName;
+        age = 0;
         setLocation(location);
         setColor(col);
     }
@@ -123,6 +125,14 @@ public abstract class Cell {
      */
     protected Field getField() {
         return field;
+    }
+
+    protected void setAge(int age) {
+        this.age = age;
+    }
+
+    protected int getAge() {
+        return age;
     }
 
     public String getName() {
