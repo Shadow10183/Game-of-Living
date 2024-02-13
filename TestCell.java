@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
  */
 
 public class TestCell extends Cell {
+    private static final Color DEFAULT_COLOR = Color.GRAY;
 
     /**
      * Create a new TestCell.
@@ -19,7 +20,7 @@ public class TestCell extends Cell {
      * @param location The location within the field.
      */
     public TestCell(Field field, Location location) {
-        super(field, location, Color.GRAY, "TestCell");
+        super(field, location, DEFAULT_COLOR, "TestCell");
         setNextState(true);
     }
 
