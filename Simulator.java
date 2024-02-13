@@ -1,9 +1,7 @@
-import javafx.scene.paint.Color; 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-
 
 /**
  * A Life (Game of Life) simulator, first described by British mathematician
@@ -15,93 +13,100 @@ import java.util.Random;
 
 public class Simulator {
 
-    private static final double MYCOPLASMA_ALIVE_PROB = 0.25;
-    private List<Cell> cells;
-    private Field field;
-    private int generation;
+  private static final double MYCOPLASMA_ALIVE_PROB = 0.25;
+  private List<Cell> cells;
+  private List<Cell> nextCells;
+  private Field field;
+  private int generation;
 
-    /**
-     * Construct a simulation field with default size.
-     */
-    public Simulator() {
-        this(SimulatorView.GRID_HEIGHT, SimulatorView.GRID_WIDTH);
+  /**
+   * Construct a simulation field with default size.
+   */
+  public Simulator() {
+    this(SimulatorView.GRID_HEIGHT, SimulatorView.GRID_WIDTH);
+  }
+
+  /**
+   * Create a simulation field with the given size.
+   * 
+   * @param depth Depth of the field. Must be greater than zero.
+   * @param width Width of the field. Must be greater than zero.
+   */
+  public Simulator(int depth, int width) {
+    cells = new ArrayList<>();
+    field = new Field(depth, width);
+    reset();
+  }
+
+  /**
+   * Run the simulation from its current state for a single generation.
+   * Iterate over the whole field updating the state of each life form.
+   */
+  public void simOneGeneration() {
+    generation++;
+    for (Iterator<Cell> it = cells.iterator(); it.hasNext();) {
+      Cell cell = it.next();
+      cell.act();
     }
-
-    /**
-     * Create a simulation field with the given size.
-     * @param depth Depth of the field. Must be greater than zero.
-     * @param width Width of the field. Must be greater than zero.
-     */
-    public Simulator(int depth, int width) {
-        cells = new ArrayList<>();
-        field = new Field(depth, width);
-        reset();
+    cells = new ArrayList<Cell>(nextCells);
+    for (Cell cell : cells) {
+      cell.updateState();
     }
+  }
 
-    /**
-     * Run the simulation from its current state for a single generation.
-     * Iterate over the whole field updating the state of each life form.
-     */
-    public void simOneGeneration() {
-        generation++;
-        for (Iterator<Cell> it = cells.iterator(); it.hasNext(); ) {
-            Cell cell = it.next();
-            cell.act();
-        }
+  /**
+   * Reset the simulation to a starting position.
+   */
+  public void reset() {
+    generation = 0;
+    cells.clear();
+    populate();
+  }
 
-        for (Cell cell : cells) {
-          cell.updateState();
-        }
-    }
-
-    /**
-     * Reset the simulation to a starting position.
-     */
-    public void reset() {
-        generation = 0;
-        cells.clear();
-        populate();
-    }
-
-    /**
-     * Randomly populate the field live/dead life forms
-     */
-    private void populate() {
-      Random rand = Randomizer.getRandom();
-      field.clear();
-      for (int row = 0; row < field.getDepth(); row++) {
-        for (int col = 0; col < field.getWidth(); col++) {
-          Location location = new Location(row, col);
-          Mycoplasma myco = new Mycoplasma(field, location, Color.ORANGE);
-          if (rand.nextDouble() <= MYCOPLASMA_ALIVE_PROB) {
-            cells.add(myco);
-          }
-          else {
-            myco.setDead();
-            cells.add(myco);
-          }
+  /**
+   * Randomly populate the field live/dead life forms
+   */
+  private void populate() {
+    Random rand = Randomizer.getRandom();
+    field.clear();
+    for (int row = 0; row < field.getDepth(); row++) {
+      for (int col = 0; col < field.getWidth(); col++) {
+        Location location = new Location(row, col);
+        Mycoplasma myco = new Mycoplasma(field, location);
+        if (rand.nextDouble() <= MYCOPLASMA_ALIVE_PROB) {
+          cells.add(myco);
+        } else {
+          myco.setDead();
+          cells.add(myco);
         }
       }
     }
+    nextCells = new ArrayList<Cell>(cells);
+  }
 
-    /**
-     * Pause for a given time.
-     * @param millisec  The time to pause for, in milliseconds
-     */
-    public void delay(int millisec) {
-        try {
-            Thread.sleep(millisec);
-        }
-        catch (InterruptedException ie) {
-            // wake up
-        }
-    }
-    
-    public Field getField() {
-        return field;
-    }
+  public void replace(Cell original, Cell replacement) {
+    nextCells.remove(original);
+    nextCells.add(replacement);
+  }
 
-    public int getGeneration() {
-        return generation;
+  /**
+   * Pause for a given time.
+   * 
+   * @param millisec The time to pause for, in milliseconds
+   */
+  public void delay(int millisec) {
+    try {
+      Thread.sleep(millisec);
+    } catch (InterruptedException ie) {
+      // wake up
     }
+  }
+
+  public Field getField() {
+    return field;
+  }
+
+  public int getGeneration() {
+    return generation;
+  }
 }

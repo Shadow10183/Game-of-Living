@@ -10,12 +10,12 @@ import java.util.HashMap;
  */
 
 public class FieldStats {
-    
-    private HashMap<Class, Counter> counters;
+
+    private HashMap<String, Counter> counters;
     private boolean countsValid;
 
     /**
-     * Construct a FieldStats object.  Set up a collection for counters for
+     * Construct a FieldStats object. Set up a collection for counters for
      * each type of cell that we might find
      */
     public FieldStats() {
@@ -25,6 +25,7 @@ public class FieldStats {
 
     /**
      * Get details of what is in the field.
+     * 
      * @return A string describing what is in the field.
      */
     public String getPopulationDetails(Field field) {
@@ -32,7 +33,7 @@ public class FieldStats {
         if (!countsValid) {
             generateCounts(field);
         }
-        for (Class key : counters.keySet()) {
+        for (String key : counters.keySet()) {
             Counter info = counters.get(key);
             buffer.append(info.getName());
             buffer.append(": ");
@@ -48,7 +49,7 @@ public class FieldStats {
      */
     public void reset() {
         countsValid = false;
-        for (Class key : counters.keySet()) {
+        for (String key : counters.keySet()) {
             Counter count = counters.get(key);
             count.reset();
         }
@@ -56,14 +57,15 @@ public class FieldStats {
 
     /**
      * Increment the count for one class of life
+     * 
      * @param cellClass The class of cell to increment.
      */
-    public void incrementCount(Class cellClass) {
+    public void incrementCount(String cellClass) {
         Counter count = counters.get(cellClass);
 
         if (count == null) {
             // We do not have a counter for this species yet. Create one.
-            count = new Counter(cellClass.getName());
+            count = new Counter(cellClass);
             counters.put(cellClass, count);
         }
         count.increment();
@@ -79,6 +81,7 @@ public class FieldStats {
     /**
      * Determine whether the simulation is still viable.
      * I.e., should it continue to run.
+     * 
      * @return true If there is more than one life form alive
      */
     public boolean isViable(Field field) {
@@ -86,7 +89,7 @@ public class FieldStats {
         if (!countsValid) {
             generateCounts(field);
         }
-        for (Class key : counters.keySet()) {
+        for (String key : counters.keySet()) {
             Counter info = counters.get(key);
             if (info.getCount() > 0) {
                 nonZero++;
@@ -99,6 +102,7 @@ public class FieldStats {
     /**
      * Generate counts of the number of cells.
      * These are not kept up to date.
+     * 
      * @param field The field to generate the stats for.
      */
     private void generateCounts(Field field) {
@@ -108,7 +112,7 @@ public class FieldStats {
                 Cell cell = field.getObjectAt(row, col);
 
                 if (cell != null) {
-                    incrementCount(cell.getClass());
+                    incrementCount(cell.getName());
                 }
             }
         }

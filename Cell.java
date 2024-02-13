@@ -1,4 +1,4 @@
-import javafx.scene.paint.Color; 
+import javafx.scene.paint.Color;
 
 /**
  * A class representing the shared characteristics of all forms of life
@@ -9,24 +9,42 @@ import javafx.scene.paint.Color;
 
 public abstract class Cell {
 
-    private boolean alive;    
+    private boolean alive;
     private boolean nextAlive; // The state of the cell in the next iteration
     private Field field;
     private Location location;
     private Color color = Color.WHITE;
+    private String cellName;
 
     /**
      * Create a new cell at location in field.
      *
-     * @param field The field currently occupied.
+     * @param field    The field currently occupied.
      * @param location The location within the field.
      */
-    public Cell(Field field, Location location, Color col) {
+    public Cell(Field field, Location location, Color col, String cellName) {
         alive = true;
         nextAlive = false;
         this.field = field;
+        this.cellName = cellName;
         setLocation(location);
         setColor(col);
+    }
+
+    protected void morphCell(String cellName) {
+        Cell newCell = null;
+        switch (cellName) {
+            case "Mycoplasma":
+                newCell = new Mycoplasma(field, location);
+                break;
+            case "TestCell":
+                newCell = new TestCell(field, location);
+                break;
+        }
+        if (newCell == null) {
+            return;
+        }
+        CellEditor.edit(this, newCell);
     }
 
     /**
@@ -37,6 +55,7 @@ public abstract class Cell {
 
     /**
      * Check whether the cell is alive or not.
+     * 
      * @return true if the cell is still alive.
      */
     protected boolean isAlive() {
@@ -80,6 +99,7 @@ public abstract class Cell {
 
     /**
      * Return the cell's location.
+     * 
      * @return The cell's location.
      */
     protected Location getLocation() {
@@ -88,6 +108,7 @@ public abstract class Cell {
 
     /**
      * Place the cell at the new location in the given field.
+     * 
      * @param location The cell's location.
      */
     protected void setLocation(Location location) {
@@ -97,9 +118,14 @@ public abstract class Cell {
 
     /**
      * Return the cell's field.
+     * 
      * @return The cell's field.
      */
     protected Field getField() {
         return field;
+    }
+
+    public String getName() {
+        return cellName;
     }
 }
