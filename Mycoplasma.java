@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
  */
 
 public class Mycoplasma extends Cell {
+    private static final Color DEFAULT_COLOR = Color.ORANGE;
 
     /**
      * Create a new Mycoplasma.
@@ -19,7 +20,7 @@ public class Mycoplasma extends Cell {
      * @param location The location within the field.
      */
     public Mycoplasma(Field field, Location location) {
-        super(field, location, Color.ORANGE, "Mycoplasma");
+        super(field, location, DEFAULT_COLOR, "Mycoplasma");
     }
 
     /**
@@ -32,11 +33,21 @@ public class Mycoplasma extends Cell {
         if (isAlive()) {
             if (neighbours.getTypeCount("Mycoplasma") > 1 && neighbours.getTypeCount("Mycoplasma") < 4) {
                 setNextState(true);
+                setAge(getAge() + 1);
+                updateColor();
             } else if (neighbours.size() >= 4) {
                 morphCell("TestCell");
             }
         } else if (neighbours.getTypeCount("Mycoplasma") == 3) {
             setNextState(true);
+            setAge(0);
+            setColor(DEFAULT_COLOR);
         }
+    }
+
+    private void updateColor() {
+        int redValue = (int) (255 - 153 * Math.min(1, (double) getAge() / 10));
+        int greenValue = (int) (165 - 114 * Math.min(1, (double) getAge() / 10));
+        setColor(Color.rgb(redValue, greenValue, 0));
     }
 }
