@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 
 public class Mycoplasma extends Cell {
     private static final Color DEFAULT_COLOR = Color.ORANGE;
+    private double infectedProb = 0;
 
     /**
      * Create a new Mycoplasma.
@@ -27,16 +28,20 @@ public class Mycoplasma extends Cell {
      * This is how the Mycoplasma decides if it's alive or not
      */
     public void act() {
-        Neighbours neighbours = getField().getLivingNeighbours(getLocation());
+        Neighbours neighbours = getField().getLivingNeighbours(getLocation(), 1);
         setNextState(false);
 
         if (isAlive()) {
+            if (getAge() >= 5) {
+                infectedProb = Math.min(0.8, Math.max(0.5, infectedProb + 0.1));
+                if (Randomizer.getRandom().nextDouble() <= infectedProb) {
+                    morphCell("InfectedCell");
+                }
+            }
             if (neighbours.getTypeCount("Mycoplasma") > 1 && neighbours.getTypeCount("Mycoplasma") < 4) {
                 setNextState(true);
                 setAge(getAge() + 1);
                 updateColor();
-            } else if (neighbours.size() >= 4) {
-                morphCell("TestCell");
             }
         } else if (neighbours.getTypeCount("Mycoplasma") == 3) {
             setNextState(true);
