@@ -102,7 +102,7 @@ public class Field {
      * @return A valid location within the grid area.
      */
     public Location randomAdjacentLocation(Location location) {
-        List<Location> adjacent = adjacentLocations(location);
+        List<Location> adjacent = adjacentLocations(location, 1);
         return adjacent.get(0);
     }
 
@@ -114,17 +114,17 @@ public class Field {
      * @param location The location from which to generate adjacencies.
      * @return A list of locations adjacent to that given.
      */
-    public List<Location> adjacentLocations(Location location) {
+    public List<Location> adjacentLocations(Location location, int range) {
         assert location != null : "Null location passed to adjacentLocations";
         // The list of locations to be returned.
         List<Location> locations = new LinkedList<>();
         if (location != null) {
             int row = location.getRow();
             int col = location.getCol();
-            for (int roffset = -1; roffset <= 1; roffset++) {
+            for (int roffset = -range; roffset <= range; roffset++) {
                 int nextRow = row + roffset;
                 if (nextRow >= 0 && nextRow < depth) {
-                    for (int coffset = -1; coffset <= 1; coffset++) {
+                    for (int coffset = -range; coffset <= range; coffset++) {
                         int nextCol = col + coffset;
                         // Exclude invalid locations and the original location.
                         if (nextCol >= 0 && nextCol < width && (roffset != 0 || coffset != 0)) {
@@ -147,13 +147,13 @@ public class Field {
      * @param location Get locations adjacent to this.
      * @return A list of living neighbours
      */
-    public Neighbours getLivingNeighbours(Location location) {
+    public Neighbours getLivingNeighbours(Location location, int range) {
 
         assert location != null : "Null location passed to adjacentLocations";
         Neighbours neighbours = new Neighbours();
 
         if (location != null) {
-            List<Location> adjLocations = adjacentLocations(location);
+            List<Location> adjLocations = adjacentLocations(location, range);
 
             for (Location loc : adjLocations) {
                 Cell cell = field[loc.getRow()][loc.getCol()];
