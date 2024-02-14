@@ -35,6 +35,10 @@ public class Neighbours {
         return neighbourCells.size();
     }
 
+    public List<Cell> getNeighbours() {
+        return neighbourCells;
+    }
+
     public int getTypeCount(String cellName) {
         if (cellTypeCount.containsKey(cellName)) {
             return cellTypeCount.get(cellName);
