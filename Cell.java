@@ -39,6 +39,9 @@ public abstract class Cell {
             case "Mycoplasma":
                 newCell = new Mycoplasma(field, location);
                 break;
+            case "InfectedCell":
+                newCell = new InfectedCell(field, location);
+                break;
             case "TestCell":
                 newCell = new TestCell(field, location);
                 break;
