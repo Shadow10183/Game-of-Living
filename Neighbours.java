@@ -35,6 +35,10 @@ public class Neighbours {
         return neighbourCells.size();
     }
 
+    public Cell getRandomNeighbour() {
+        return neighbourCells.get(0);
+    }
+
     public List<Cell> getNeighbours() {
         return neighbourCells;
     }
