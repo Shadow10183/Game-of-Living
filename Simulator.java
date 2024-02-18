@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -14,8 +12,8 @@ import java.util.Random;
 public class Simulator {
 
   private static final double MYCOPLASMA_ALIVE_PROB = 0.25;
-  private List<Cell> cells;
-  private List<Cell> nextCells;
+  private HashMap<Location, Cell> cells;
+  private HashMap<Location, Cell> nextCells;
   private Field field;
   private int generation;
 
@@ -33,7 +31,7 @@ public class Simulator {
    * @param width Width of the field. Must be greater than zero.
    */
   public Simulator(int depth, int width) {
-    cells = new ArrayList<>();
+    cells = new HashMap<>();
     field = new Field(depth, width);
     reset();
   }
@@ -43,15 +41,14 @@ public class Simulator {
    * Iterate over the whole field updating the state of each life form.
    */
   public void simOneGeneration() {
+    for (Location loc : cells.keySet()) {
+      cells.get(loc).act();
+    }
+    for (Location loc : nextCells.keySet()) {
+      cells.put(loc, nextCells.get(loc));
+    }
+    field.updateCells();
     generation++;
-    for (Iterator<Cell> it = cells.iterator(); it.hasNext();) {
-      Cell cell = it.next();
-      cell.act();
-    }
-    cells = new ArrayList<Cell>(nextCells);
-    for (Cell cell : cells) {
-      cell.updateState();
-    }
   }
 
   /**
@@ -72,21 +69,19 @@ public class Simulator {
     for (int row = 0; row < field.getDepth(); row++) {
       for (int col = 0; col < field.getWidth(); col++) {
         Location location = new Location(row, col);
-        Mycoplasma myco = new Mycoplasma(field, location);
         if (rand.nextDouble() <= MYCOPLASMA_ALIVE_PROB) {
-          cells.add(myco);
+          cells.put(location, new Mycoplasma(field, location));
         } else {
-          myco.setDead();
-          cells.add(myco);
+          cells.put(location, new EmptyCell(field, location));
         }
       }
     }
-    nextCells = new ArrayList<Cell>(cells);
+    field.updateCells();
+    nextCells = new HashMap<>(cells);
   }
 
   public void replace(Cell original, Cell replacement) {
-    nextCells.remove(original);
-    nextCells.add(replacement);
+    nextCells.put(original.getLocation(), replacement);
   }
 
   /**
