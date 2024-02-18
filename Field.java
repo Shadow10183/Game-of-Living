@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,6 +16,7 @@ public class Field {
     private static final Random rand = Randomizer.getRandom();
     private int depth, width;
     private Cell[][] field;
+    private Cell[][] nextField;
 
     /**
      * Represent a field of the given dimensions.
@@ -26,6 +28,7 @@ public class Field {
         this.depth = depth;
         this.width = width;
         field = new Cell[depth][width];
+        nextField = new Cell[depth][width];
     }
 
     /**
@@ -35,6 +38,7 @@ public class Field {
         for (int row = 0; row < depth; row++) {
             for (int col = 0; col < width; col++) {
                 field[row][col] = null;
+                nextField[row][col] = null;
             }
         }
     }
@@ -46,6 +50,7 @@ public class Field {
      */
     public void clear(Location location) {
         field[location.getRow()][location.getCol()] = null;
+        nextField[location.getRow()][location.getCol()] = null;
     }
 
     /**
@@ -68,7 +73,15 @@ public class Field {
      * @param location Where to place the cell.
      */
     public void place(Cell cell, Location location) {
-        field[location.getRow()][location.getCol()] = cell;
+        nextField[location.getRow()][location.getCol()] = cell;
+    }
+
+    public void updateCells() {
+        for (int row = 0; row < depth; row++) {
+            for (int col = 0; col < width; col++) {
+                field[row][col] = nextField[row][col];
+            }
+        }
     }
 
     /**
@@ -157,7 +170,33 @@ public class Field {
 
             for (Location loc : adjLocations) {
                 Cell cell = field[loc.getRow()][loc.getCol()];
-                if (cell.isAlive()) {
+                if (cell.getName() != "EmptyCell") {
+                    neighbours.add(cell);
+                    neighbours.typeCount(cell.getName());
+                }
+            }
+            neighbours.shuffle();
+        }
+        return neighbours;
+    }
+
+    /**
+     * Get a shuffled list of dead neighbours
+     * 
+     * @param location Get locations adjacent to this.
+     * @return A list of dead neighbours
+     */
+    public Neighbours getDeadNeighbours(Location location, int range) {
+
+        assert location != null : "Null location passed to adjacentLocations";
+        Neighbours neighbours = new Neighbours();
+
+        if (location != null) {
+            List<Location> adjLocations = adjacentLocations(location, range);
+
+            for (Location loc : adjLocations) {
+                Cell cell = field[loc.getRow()][loc.getCol()];
+                if (cell.getName() == "EmptyCell") {
                     neighbours.add(cell);
                     neighbours.typeCount(cell.getName());
                 }
