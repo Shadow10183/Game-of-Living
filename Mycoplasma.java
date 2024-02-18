@@ -31,23 +31,30 @@ public class Mycoplasma extends Cell {
         Neighbours neighbours = getField().getLivingNeighbours(getLocation(), 1);
         setNextState(false);
 
-        if (isAlive()) {
-            if (getAge() >= 5) {
-                infectedProb = Math.min(0.8, Math.max(0.5, infectedProb + 0.1));
-                if (Randomizer.getRandom().nextDouble() <= infectedProb) {
-                    morphCell("InfectedCell");
-                }
+        if (getAge() >= 5) {
+            infectedProb = Math.min(0.8, Math.max(0.5, infectedProb + 0.1));
+            if (Randomizer.getRandom().nextDouble() <= infectedProb) {
+                morphCell("InfectedCell");
             }
-            if (neighbours.getTypeCount("Mycoplasma") > 1 && neighbours.getTypeCount("Mycoplasma") < 4) {
-                setNextState(true);
-                setAge(getAge() + 1);
-                updateColor();
-            }
-        } else if (neighbours.getTypeCount("Mycoplasma") == 3) {
-            setNextState(true);
-            setAge(0);
-            setColor(DEFAULT_COLOR);
         }
+        Neighbours extendedNeighbours = getField().getLivingNeighbours(getLocation(), 2);
+        int infectedNeighbours = extendedNeighbours.getTypeCount("InfectedCell");
+        if (infectedNeighbours > 0) {
+            Neighbours deadNeighbours = getField().getDeadNeighbours(getLocation(), 1);
+            if (deadNeighbours.size() > 0
+                    && Randomizer.getRandom().nextDouble() < ((double) infectedNeighbours) / 25) {
+                deadNeighbours.getRandomNeighbour().morphCell("Symbiote");
+            }
+        }
+        if ((neighbours.getTypeCount("Mycoplasma") > 1 || neighbours.getTypeCount("Symbiote") > 1)
+                && neighbours.getTypeCount("Mycoplasma") < 4) {
+            setNextState(true);
+            setAge(getAge() + 1);
+            updateColor();
+            return;
+        }
+
+        morphCell("EmptyCell");
     }
 
     private void updateColor() {
