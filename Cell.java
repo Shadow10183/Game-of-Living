@@ -9,7 +9,6 @@ import javafx.scene.paint.Color;
 
 public abstract class Cell {
 
-    private boolean alive;
     private boolean nextAlive; // The state of the cell in the next iteration
     private Field field;
     private Location location;
@@ -24,8 +23,7 @@ public abstract class Cell {
      * @param location The location within the field.
      */
     public Cell(Field field, Location location, Color col, String cellName) {
-        alive = true;
-        nextAlive = false;
+        nextAlive = true;
         this.field = field;
         this.cellName = cellName;
         age = 0;
@@ -41,6 +39,12 @@ public abstract class Cell {
                 break;
             case "InfectedCell":
                 newCell = new InfectedCell(field, location);
+                break;
+            case "Symbiote":
+                newCell = new Symbiote(field, location);
+                break;
+            case "EmptyCell":
+                newCell = new EmptyCell(field, location);
                 break;
             case "TestCell":
                 newCell = new TestCell(field, location);
@@ -59,33 +63,14 @@ public abstract class Cell {
     abstract public void act();
 
     /**
-     * Check whether the cell is alive or not.
-     * 
-     * @return true if the cell is still alive.
-     */
-    protected boolean isAlive() {
-        return alive;
-    }
-
-    /**
-     * Indicate that the cell is no longer alive.
-     */
-    protected void setDead() {
-        alive = false;
-    }
-
-    /**
      * Indicate that the cell will be alive or dead in the next generation.
      */
     public void setNextState(boolean value) {
         nextAlive = value;
     }
 
-    /**
-     * Changes the state of the cell
-     */
-    public void updateState() {
-        alive = nextAlive;
+    protected boolean getNextState() {
+        return nextAlive;
     }
 
     /**

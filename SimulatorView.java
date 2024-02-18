@@ -24,8 +24,6 @@ public class SimulatorView extends Application {
     public static final int WIN_WIDTH = 650;
     public static final int WIN_HEIGHT = 650;
 
-    private static final Color EMPTY_COLOR = Color.WHITE;
-
     private final String GENERATION_PREFIX = "Generation: ";
     private final String POPULATION_PREFIX = "Population: ";
 
@@ -103,11 +101,11 @@ public class SimulatorView extends Application {
             for (int col = 0; col < field.getWidth(); col++) {
                 Cell cell = field.getObjectAt(row, col);
 
-                if (cell != null && cell.isAlive()) {
+                if (cell.getName() != "EmptyCell") {
                     stats.incrementCount(cell.getName());
+                }
+                if (cell != null) {
                     fieldCanvas.drawMark(col, row, cell.getColor());
-                } else {
-                    fieldCanvas.drawMark(col, row, EMPTY_COLOR);
                 }
             }
         }
