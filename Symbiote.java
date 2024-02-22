@@ -28,14 +28,32 @@ public class Symbiote extends Cell {
      * This is how the Symbiote decides if it's alive or not
      */
     public void act() {
-        setAge(getAge() + 1);
         Neighbours neighbours = getField().getLivingNeighbours(getLocation(), 1);
-        for (int i = 0; i < neighbours.size(); i++) {
-            Cell cell = neighbours.getNeighbours().get(i);
-            if (cell.getName() == "InfectedCell") {
-                cell.morphCell("Mycoplasma");
+        if (neighbours.getTypeCount("Mycoplasma") == 0) {
+            if (getAge() > 10) {
+                morphCell("EmptyCell");
+            }
+            setAge(getAge() + 1);
+        }
+        Neighbours extendedNeighbours = getField().getLivingNeighbours(getLocation(), 5);
+        if (extendedNeighbours.getTypeCount("InfectedCell") > 0) {
+            int distance = 1;
+            while (getField().getLivingNeighbours(getLocation(), distance).getTypeCount("InfectedCell") == 0) {
+                distance += 1;
+            }
+            if (distance > 1) {
+                Neighbours deadNeighbours = getField().getDeadNeighbours(getLocation(), 1);
+                for (Cell cell : deadNeighbours.getNeighbours()) {
+                    EmptyCell emptyCell = (EmptyCell) cell;
+                    if (getField().getLivingNeighbours(emptyCell.getLocation(), distance - 1)
+                            .getTypeCount("InfectedCell") > 0 && emptyCell.occupy()) {
+                        morphCell("EmptyCell");
+                        setLocation(emptyCell.getLocation());
+                        emptyCell.morphCell(this);
+                        break;
+                    }
+                }
             }
         }
-
     }
 }
