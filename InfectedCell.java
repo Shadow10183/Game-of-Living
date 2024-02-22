@@ -29,8 +29,13 @@ public class InfectedCell extends Cell {
      * This is how the InfectedCell decides if it's alive or not
      */
     public void act() {
+        boolean cured = false;
         setAge(getAge() + 1);
         Neighbours neighbours = getField().getLivingNeighbours(getLocation(), 1);
+        if (neighbours.getTypeCount("Symbiote") > 0) {
+            morphCell("Mycoplasma");
+            cured = true;
+        }
         if (getAge() < 5) {
             return;
         }
@@ -40,6 +45,20 @@ public class InfectedCell extends Cell {
             if (cell.getName() == "Mycoplasma") {
                 if (Randomizer.getRandom().nextDouble() <= infectionProb) {
                     cell.morphCell("InfectedCell");
+                }
+            }
+        }
+        if (getAge() > 10 && !cured) {
+            Neighbours deadNeighbours = getField().getDeadNeighbours(getLocation(), 1);
+            if (deadNeighbours.size() > 0) {
+                for (Cell cell : deadNeighbours.getNeighbours()) {
+                    EmptyCell emptyCell = (EmptyCell) cell;
+                    if (emptyCell.occupy()) {
+                        morphCell("EmptyCell");
+                        setLocation(emptyCell.getLocation());
+                        emptyCell.morphCell(this);
+                        break;
+                    }
                 }
             }
         }
