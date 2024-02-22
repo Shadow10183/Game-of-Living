@@ -56,6 +56,10 @@ public abstract class Cell {
         CellEditor.edit(this, newCell);
     }
 
+    protected void morphCell(Cell cell) {
+        CellEditor.edit(this, cell);
+    }
+
     /**
      * Make this cell act - that is: the cell decides it's status in the
      * next generation.
@@ -92,7 +96,7 @@ public abstract class Cell {
      * 
      * @return The cell's location.
      */
-    protected Location getLocation() {
+    public Location getLocation() {
         return location;
     }
 
