@@ -46,9 +46,6 @@ public abstract class Cell {
             case "EmptyCell":
                 newCell = new EmptyCell(field, location);
                 break;
-            case "TestCell":
-                newCell = new TestCell(field, location);
-                break;
         }
         if (newCell == null) {
             return;
