@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
  */
 
 public class Symbiote extends Cell {
-    private static final Color DEFAULT_COLOR = Color.YELLOW;
+    private static final Color DEFAULT_COLOR = Color.SKYBLUE;
 
     /**
      * Create a new Symbiote.
