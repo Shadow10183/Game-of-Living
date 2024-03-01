@@ -73,10 +73,6 @@ public class SimulatorView extends Application {
         updateCanvas(simulator.getGeneration(), simulator.getField());
 
         stage.show();
-
-        // to be removed before final deployment
-        simulator.delay(2000);
-        simulate(99999999);
     }
 
     /**
