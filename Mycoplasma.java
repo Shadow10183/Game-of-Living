@@ -46,7 +46,7 @@ public class Mycoplasma extends Cell {
                 deadNeighbours.getRandomNeighbour().morphCell("Symbiote");
             }
         }
-        if ((neighbours.getTypeCount("Mycoplasma") > 1 || neighbours.getTypeCount("Symbiote") > 1)
+        if ((neighbours.getTypeCount("Mycoplasma") > 1 || neighbours.getTypeCount("Symbiote") > 2)
                 && neighbours.getTypeCount("Mycoplasma") < 4) {
             setNextState(true);
             setAge(getAge() + 1);
