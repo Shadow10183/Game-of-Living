@@ -5,18 +5,17 @@ import java.util.HashMap;
  * of a field. It is flexible: it will create and maintain a counter
  * for any class of object that is found within the field.
  *
- * @author David J. Barnes and Michael Kölling
- * @version 2016.02.29
+ * @author Lance Eric Castro So K21055616, Leung Yau Hei K23093432
  */
 
 public class FieldStats {
-
+    
     private HashMap<String, Counter> counters;
     private boolean countsValid;
 
     /**
      * Construct a FieldStats object. Set up a collection for counters for
-     * each type of cell that we might find
+     * each type of cell that we might find.
      */
     public FieldStats() {
         counters = new HashMap<>();
@@ -56,7 +55,7 @@ public class FieldStats {
     }
 
     /**
-     * Increment the count for one class of life
+     * Increment the count for one class of life.
      * 
      * @param cellClass The class of cell to increment.
      */
@@ -82,7 +81,7 @@ public class FieldStats {
      * Determine whether the simulation is still viable.
      * I.e., should it continue to run.
      * 
-     * @return true If there is more than one life form alive
+     * @return true If there is more than one life form alive.
      */
     public boolean isViable(Field field) {
         int nonZero = 0;

@@ -1,12 +1,10 @@
-
 /**
  * Provide a counter for a participant in the simulation.
  * This includes an identifying string and a count of how
  * many participants of this type currently exist within
  * the simulation.
  *
- * @author David J. Barnes and Michael Kölling
- * @version 2016.02.29
+ * @author Lance Eric Castro So K21055616, Leung Yau Hei K23093432
  */
 
 public class Counter {
@@ -24,14 +22,14 @@ public class Counter {
     }
 
     /**
-     * @return The short description of this type.
+     * Return the name.
      */
     public String getName() {
         return name;
     }
 
     /**
-     * @return The current count for this type.
+     * Return the current count for this type.
      */
     public int getCount() {
         return count;

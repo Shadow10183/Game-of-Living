@@ -5,8 +5,7 @@ import javafx.scene.paint.Color;
 /**
  * Provide a graphical view of the field. This is a custom node for the user interface. 
  *
- * @author Jeffery Raphael
- * @version 2024.02.03
+ * @author Lance Eric Castro So K21055616, Leung Yau Hei K23093432
  */
 
 public class FieldCanvas extends Canvas {
@@ -26,6 +25,9 @@ public class FieldCanvas extends Canvas {
         this.width = width;
     }
     
+    /**
+    * Set the scale of the grid.
+    */
     public void setScale(int gridHeight, int gridWidth) {
         xScale = width / gridWidth;
         yScale = height / gridHeight;
@@ -38,7 +40,7 @@ public class FieldCanvas extends Canvas {
     }
   
     /**
-    * Paint a rectangle of the given color on the canvas
+    * Paint a rectangle of the given color on the canvas.
     */
     public void drawMark(int x, int y, Color color) {
         gc.setFill(color);

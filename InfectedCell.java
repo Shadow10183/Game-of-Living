@@ -1,16 +1,13 @@
 import javafx.scene.paint.Color;
 
 /**
- * Simplest form of life.
- * Fun Fact: Infected cells are one of the simplest forms of life. A type of
- * bacteria, they only have 500-1000 genes! For comparison, fruit flies have
- * about 14,000 genes.
+ * Infected cells are diseased mycoplasma.
  *
- * @author David J. Barnes, Michael Kölling & Jeffery Raphael
- * @version 2022.01.06
+ * @author Lance Eric Castro So K21055616, Leung Yau Hei K23093432
  */
 
 public class InfectedCell extends Cell {
+
     private static final Color DEFAULT_COLOR = Color.LIMEGREEN;
     private double infectionProb = 0.6;
 
@@ -26,37 +23,46 @@ public class InfectedCell extends Cell {
     }
 
     /**
-     * This is how the InfectedCell decides if it's alive or not
+     * How the infected cell should act.
      */
     public void act() {
+        // If the infected cell is neighbouring a symbiote, it will be cured into a
+        // mycoplsma.
         boolean cured = false;
         setAge(getAge() + 1);
         Neighbours neighbours = getField().getLivingNeighbours(getLocation(), 1);
         if (neighbours.getTypeCount("Symbiote") > 0) {
-            morphCell("Mycoplasma");
+            transform("Mycoplasma");
             cured = true;
         }
+
+        // Infected cells remain dormant for 5 generations.
         if (getAge() < 5) {
             return;
         }
+
+        // Has a chance to infect any neighbouring mycoplasma. Probability based on its
+        // own age.
         infectionProb = Math.min(0.9, infectionProb + 0.1 * (getAge() - 5) / 2);
         for (int i = 0; i < neighbours.size(); i++) {
             Cell cell = neighbours.getNeighbours().get(i);
             if (cell.getName() == "Mycoplasma") {
                 if (Randomizer.getRandom().nextDouble() <= infectionProb) {
-                    cell.morphCell("InfectedCell");
+                    cell.transform("InfectedCell");
                 }
             }
         }
+
+        // When an infected cell lives past 10 generations, it will be able to move
         if (getAge() > 10 && !cured) {
             Neighbours deadNeighbours = getField().getDeadNeighbours(getLocation(), 1);
             if (deadNeighbours.size() > 0) {
                 for (Cell cell : deadNeighbours.getNeighbours()) {
                     EmptyCell emptyCell = (EmptyCell) cell;
                     if (emptyCell.occupy()) {
-                        morphCell("EmptyCell");
+                        transform("EmptyCell");
                         setLocation(emptyCell.getLocation());
-                        emptyCell.morphCell(this);
+                        emptyCell.transform(this);
                         break;
                     }
                 }

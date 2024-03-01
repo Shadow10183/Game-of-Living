@@ -1,8 +1,7 @@
 /**
  * Represent a location in a rectangular grid.
  *
- * @author David J. Barnes and Michael Kölling
- * @version 2016.02.29
+ * @author Lance Eric Castro So K21055616, Leung Yau Hei K23093432
  */
 
 public class Location {
@@ -34,7 +33,7 @@ public class Location {
     }
 
     /**
-     * Return a string of the form row,column
+     * Return a string of the form row,column.
      * @return A string representation of the location.
      */
     public String toString() {

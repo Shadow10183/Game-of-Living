@@ -1,16 +1,13 @@
 import javafx.scene.paint.Color;
 
 /**
- * Simplest form of life.
- * Fun Fact: Symbiote cells are one of the simplest forms of life. A type of
- * bacteria, they only have 500-1000 genes! For comparison, fruit flies have
- * about 14,000 genes.
+ * A type of cell that has symbiotic relationship with mycoplasma
  *
- * @author David J. Barnes, Michael Kölling & Jeffery Raphael
- * @version 2022.01.06
+ * @author Lance Eric Castro So K21055616, Leung Yau Hei K23093432
  */
 
 public class Symbiote extends Cell {
+
     private static final Color DEFAULT_COLOR = Color.SKYBLUE;
 
     /**
@@ -25,16 +22,21 @@ public class Symbiote extends Cell {
     }
 
     /**
-     * This is how the Symbiote decides if it's alive or not
+     * How the symbiote should act.
      */
     public void act() {
+        // If the symbiote has zero neighbouring mycoplasma and it is at least age 11,
+        // it will die and leave an empty cell behind.
         Neighbours neighbours = getField().getLivingNeighbours(getLocation(), 1);
         if (neighbours.getTypeCount("Mycoplasma") == 0) {
             if (getAge() > 10) {
-                morphCell("EmptyCell");
+                transform("EmptyCell");
             }
-            setAge(getAge() + 1);
+            setAge(getAge() + 1); // Symbiotes only age when there are no neighbouring mycoplasma.
         }
+
+        // Allow symbiotes to move towards infected cells with a simplified Dijkstra's
+        // algorithm.
         Neighbours extendedNeighbours = getField().getLivingNeighbours(getLocation(), 5);
         if (extendedNeighbours.getTypeCount("InfectedCell") > 0) {
             int distance = 1;
@@ -47,9 +49,9 @@ public class Symbiote extends Cell {
                     EmptyCell emptyCell = (EmptyCell) cell;
                     if (getField().getLivingNeighbours(emptyCell.getLocation(), distance - 1)
                             .getTypeCount("InfectedCell") > 0 && emptyCell.occupy()) {
-                        morphCell("EmptyCell");
+                        transform("EmptyCell");
                         setLocation(emptyCell.getLocation());
-                        emptyCell.morphCell(this);
+                        emptyCell.transform(this);
                         break;
                     }
                 }

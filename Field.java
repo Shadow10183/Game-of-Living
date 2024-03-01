@@ -5,17 +5,19 @@ import java.util.Random;
 
 /**
  * Represent a rectangular grid of field positions.
- * Each position stores a single cell
+ * Each position stores a single cell.
+ * This class also allows cells to be updated, and also contains
+ * methods to get a cell's neighbours.
  *
- * @author David J. Barnes, Michael Kölling & Jeffery Raphael
- * @version 2022.01.06
+ * @author Lance Eric Castro So K21055616, Leung Yau Hei K23093432
  */
 
 public class Field {
+
     private static final Random rand = Randomizer.getRandom();
     private int depth, width;
     private Cell[][] field;
-    private Cell[][] nextField;
+    private Cell[][] nextField; // The next state of the field
 
     /**
      * Represent a field of the given dimensions.
@@ -75,6 +77,9 @@ public class Field {
         nextField[location.getRow()][location.getCol()] = cell;
     }
 
+    /**
+     * Update the cells to its next state.
+     */
     public void updateCells() {
         for (int row = 0; row < depth; row++) {
             for (int col = 0; col < width; col++) {
@@ -87,7 +92,6 @@ public class Field {
      * Return the cell at the given location, if any.
      * 
      * @param location Where in the field.
-     * @return The cell at the given location, or null if there is none.
      */
     public Cell getObjectAt(Location location) {
         return getObjectAt(location.getRow(), location.getCol());
@@ -98,7 +102,6 @@ public class Field {
      * 
      * @param row The desired row.
      * @param col The desired column.
-     * @return The cell at the given location, or null if there is none.
      */
     public Cell getObjectAt(int row, int col) {
         return field[row][col];
@@ -111,7 +114,6 @@ public class Field {
      * of the field.
      * 
      * @param location The location from which to generate an adjacency.
-     * @return A valid location within the grid area.
      */
     public Location randomAdjacentLocation(Location location) {
         List<Location> adjacent = adjacentLocations(location, 1);
@@ -124,7 +126,6 @@ public class Field {
      * All locations will lie within the grid.
      * 
      * @param location The location from which to generate adjacencies.
-     * @return A list of locations adjacent to that given.
      */
     public List<Location> adjacentLocations(Location location, int range) {
         assert location != null : "Null location passed to adjacentLocations";
@@ -146,18 +147,16 @@ public class Field {
                 }
             }
 
-            // Shuffle the list. Several other methods rely on the list
-            // being in a random order.
+            // Shuffle the list with a seed
             Collections.shuffle(locations, rand);
         }
         return locations;
     }
 
     /**
-     * Get a shuffled list of living neighbours
+     * Return a shuffled list of living neighbours.
      * 
      * @param location Get locations adjacent to this.
-     * @return A list of living neighbours
      */
     public Neighbours getLivingNeighbours(Location location, int range) {
 
@@ -180,10 +179,9 @@ public class Field {
     }
 
     /**
-     * Get a shuffled list of dead neighbours
+     * Return a shuffled list of dead neighbours.
      * 
      * @param location Get locations adjacent to this.
-     * @return A list of dead neighbours
      */
     public Neighbours getDeadNeighbours(Location location, int range) {
 
@@ -207,8 +205,6 @@ public class Field {
 
     /**
      * Return the depth of the field.
-     * 
-     * @return The depth of the field.
      */
     public int getDepth() {
         return depth;
@@ -216,8 +212,6 @@ public class Field {
 
     /**
      * Return the width of the field.
-     * 
-     * @return The width of the field.
      */
     public int getWidth() {
         return width;

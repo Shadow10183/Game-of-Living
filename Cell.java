@@ -1,10 +1,9 @@
 import javafx.scene.paint.Color;
 
 /**
- * A class representing the shared characteristics of all forms of life
+ * A class representing the shared characteristics of all forms of life.
  *
- * @author David J. Barnes, Michael Kölling & Jeffery Raphael
- * @version 2022.01.06
+ * @author Lance Eric Castro So K21055616, Leung Yau Hei K23093432
  */
 
 public abstract class Cell {
@@ -31,7 +30,12 @@ public abstract class Cell {
         setColor(col);
     }
 
-    protected void morphCell(String cellName) {
+    /**
+     * Transforms itself into a new life form.
+     * 
+     * @param cellName The type of cell to change to.
+     */
+    protected void transform(String cellName) {
         Cell newCell = null;
         switch (cellName) {
             case "Mycoplasma":
@@ -53,7 +57,12 @@ public abstract class Cell {
         CellEditor.edit(this, newCell);
     }
 
-    protected void morphCell(Cell cell) {
+    /**
+     * Transforms itself into a pre-existing life form.
+     * 
+     * @param cell The cell to change to.
+     */
+    protected void transform(Cell cell) {
         CellEditor.edit(this, cell);
     }
 
@@ -70,19 +79,22 @@ public abstract class Cell {
         nextAlive = value;
     }
 
+    /**
+     * Return the next state of a cell.
+     */
     protected boolean getNextState() {
         return nextAlive;
     }
 
     /**
-     * Changes the color of the cell
+     * Changes the color of a cell.
      */
     public void setColor(Color col) {
         color = col;
     }
 
     /**
-     * Returns the cell's color
+     * Return the cell's color
      */
     public Color getColor() {
         return color;
@@ -90,8 +102,6 @@ public abstract class Cell {
 
     /**
      * Return the cell's location.
-     * 
-     * @return The cell's location.
      */
     public Location getLocation() {
         return location;
@@ -109,21 +119,28 @@ public abstract class Cell {
 
     /**
      * Return the cell's field.
-     * 
-     * @return The cell's field.
      */
     protected Field getField() {
         return field;
     }
 
+    /**
+     * Set the age of a cell.
+     */
     protected void setAge(int age) {
         this.age = age;
     }
 
+    /**
+     * Return the age of a cell.
+     */
     protected int getAge() {
         return age;
     }
 
+    /**
+     * Return the name of a cell.
+     */
     public String getName() {
         return cellName;
     }

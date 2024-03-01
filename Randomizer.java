@@ -6,12 +6,11 @@ import java.util.Random;
  * (which helps with testing). Set 'useShared' to false to get different random
  * behaviour every time.
  *
- * @author David J. Barnes and Michael Kölling
- * @version 2016.02.29
+ * @author Lance Eric Castro So K21055616, Leung Yau Hei K23093432
  */
 
 public class Randomizer {
-  
+    
     private static final int SEED = 1111;
     private static final Random rand = new Random(SEED);
     private static final boolean useShared = true;

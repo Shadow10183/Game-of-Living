@@ -9,11 +9,10 @@ import javafx.stage.Stage;
 
 /**
  * A graphical view of the simulation grid. The view displays a rectangle for
- * each location. Colors for each type of life form can be defined using the
- * setColor method.
+ * each location. Through this class, the user will also be allowed to run the
+ * simulation by simulating the number of generations.
  *
- * @author David J. Barnes, Michael Kölling & Jeffery Raphael
- * @version 2024.02.03
+ * @author Lance Eric Castro So K21055616, Leung Yau Hei K23093432
  */
 
 public class SimulatorView extends Application {
@@ -38,7 +37,6 @@ public class SimulatorView extends Application {
      * @param height The simulation's height.
      * @param width  The simulation's width.
      */
-    @Override
     public void start(Stage stage) {
 
         stats = new FieldStats();
@@ -130,7 +128,7 @@ public class SimulatorView extends Application {
 
             for (int gen = 1; gen <= numGenerations; gen++) {
                 simulator.simOneGeneration();
-                simulator.delay(1000);
+                simulator.delay(500);
                 Platform.runLater(() -> {
                     updateCanvas(simulator.getGeneration(), simulator.getField());
                 });
@@ -147,6 +145,9 @@ public class SimulatorView extends Application {
         updateCanvas(simulator.getGeneration(), simulator.getField());
     }
 
+    /**
+     * Main method to start the program.
+     */
     public static void main(String args[]) {
         launch(args);
     }
